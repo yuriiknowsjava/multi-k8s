@@ -1,0 +1,22 @@
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t yuriiknowsjava/multi-client:test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true yuriiknowsjava/multi-client:test npm run test -- --coverage
+
+after_success:
+  # build images
+  - docker build -t yuriiknowsjava/multi-client ./client
+  - docker build -t yuriiknowsjava/multi-server ./server
+  - docker build -t yuriiknowsjava/multi-worker ./worker
+
+  # Log into the docker CLI and push images
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  - docker push yuriiknowsjava/multi-client
+  - docker push yuriiknowsjava/multi-server
+  - docker push yuriiknowsjava/multi-worker
