@@ -1,0 +1,11 @@
+FROM node:alpine
+
+# Default user is node in node base image!
+# https://stackoverflow.com/questions/55926705/docker-error-eacces-permission-denied-mkdir-project-node-modules-cache
+# https://github.com/nodejs/docker-node/issues/1262#issuecomment-677577653
+RUN mkdir -p /app && chown -R node:node /app
+WORKDIR '/app'
+COPY ./package*.json ./
+RUN npm install
+COPY ./ ./
+CMD ["npm", "run", "start"]
