@@ -47,3 +47,10 @@ spec:
                 secretKeyRef:
                   name: pgdatabase
                   key: POSTGRES_DB
+          resources:
+            limits:
+              memory: 256Mi
+              cpu: "0.5"
+            requests:
+              memory: 128Mi
+              cpu: "0.2"
